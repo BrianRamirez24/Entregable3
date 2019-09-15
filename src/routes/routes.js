@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const router = express.Router();
 const productSchema = require('../model/producto');
 const clientes = require("../model/cliente");
@@ -7,8 +8,10 @@ const clientes = require("../model/cliente");
  defecto del servidor 3000
 */
 //redirige por defecto al localhost:3000/
+
+
 router.route('/').all((req,res,next)=>{
-    res.json({"message":"wellcome to hell"});
+    res.redirect('/signup');
 })
 
 const consultarProductos = async (req, res, next) => {
@@ -98,10 +101,18 @@ router.route('/producto')
 
 
       router.route('/signup')
-      .get((req,res,next)=>{res.json({"message":"welcomme to sign up"})})
-      .post((req,res,next)=>{})
+      .get((req, res, next) => {
+          res.render('signup');
+        })
+      .post((req,res,next)=>{
+          console.log(req.body);
+      })
       
-
+      router.route('/login')
+      .get((req, res, next) => {
+          res.render('index');
+        })
+      .post((req,res,next)=>{})  
      
 
 module.exports = router;

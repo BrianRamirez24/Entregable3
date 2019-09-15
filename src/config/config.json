@@ -1,6 +1,6 @@
 {
 	"dev": [
-		"mongodb+srv://brian:1234@arp-entregable-so7mn.mongodb.net/erp?retryWrites=true&w=majority",
+		"mongodb+srv://brian:1234@arp-entregable-so7mn.mongodb.net/arp-entregable?retryWrites=true&w=majority",
 
 		{
 			"useNewUrlParser": true
