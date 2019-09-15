@@ -6,13 +6,30 @@ const cors = require('cors');
 const ejs_engine = require('ejs-mate');
 const app = express();
 const routes = require("./routes/routes");
-require('./model/db');
+const passport = require('passport');
+const session = require('express-session');
 
+require('./model/db');
+require('./passport/local-auth');
+ 
 //middwares
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
+/*
+app.use(session({
+    secret : 'secret',
+    resave: true,
+    saveUninitialized: true
+
+}));
+
+app.use(passport.initialize());
+
+app.use(passport.session())
+*/
 app.use(express.urlencoded({extended:false}));
+
 
 //settings
 app.set('views' ,path.join(__dirname,'views'));

@@ -1,13 +1,19 @@
-const mongoose = require('mongoose');
-
+const mongoose = require("mongoose");
+const bcryp = require("bcrypt-nodejs");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    nombre:{type:String, required:true},
-    descripcion:{type:String, required:true},
-    cantidad:{type:Number, required:true},
-    precio:{type:Number, required:true},
-    iva:{type:Number, required:true},
+	email: { type: String, required: true },
+	password: { type: String, required: true },
+	roll:{type: String, required: true },
+	estado:{type: String, required: true}
+});
 
-})
-module.exports = mongoose.model('productos', userSchema)
+
+userSchema.methods.encryptPassword = (password) => bcryp.hashSync(password, bcryp.genSaltSync(10));
+
+userSchema.methods.comparePassword = (password) => bcryp.compareSync(password, this.password);
+
+
+module.exports = mongoose.model("user", userSchema);
+

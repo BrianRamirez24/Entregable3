@@ -3,6 +3,10 @@ const path = require('path');
 const router = express.Router();
 const productSchema = require('../model/producto');
 const clientes = require("../model/cliente");
+const User = require("../model/user");
+const bcryst = require('bcryptjs');
+
+const passport = require('passport');
 /*
  se ejecuta cuando se entra a la ruta por
  defecto del servidor 3000
@@ -10,8 +14,9 @@ const clientes = require("../model/cliente");
 //redirige por defecto al localhost:3000/
 
 
-router.route('/').all((req,res,next)=>{
-    res.redirect('/signup');
+router.route('/')
+  .all((req,res,next)=>{
+    res.redirect('/login');
 })
 
 const consultarProductos = async (req, res, next) => {
@@ -99,20 +104,102 @@ router.route('/producto')
       .put(actualizarProductos)
       .delete(destroyProductos)
 
-
-      router.route('/signup')
+router.route('/register')
       .get((req, res, next) => {
-          res.render('signup');
+          res.render('register');
+          
         })
-      .post((req,res,next)=>{
-          console.log(req.body);
-      })
+      .post( (req, res, next) => {
+            const {email , password, password2, roll} = req.body
+
+            if(!email){
+                res.send("debe ingresar su corrreo electronico")
+            }
+            else if(!password){
+                res.send("debe ingresar una contraseña valida")
+            }
+            else if(password != password2){
+                res.send("las contraseñas deben coincidir")
+            }
+            else if(password.length<6){
+                res.send("la contraseña debe de tener almenos 6 caracteres")
+            }
+            else{
+               User.findOne({email : email})
+               .then((user)=>{
+                if(user) {
+                   res.send("el usuario ya esta registrado en la base de datos")
+                }else{
+                
+                
+                        const users = new User(
+                            {
+                                email,
+                                password,
+                                roll,
+                                estado:"sin verificar"
+
+                                
+                                
+                            }
+
+                        );
+
+                        console.log(users);
+
+                        users.save()
+                        .then(()=> console.log("saved"))
+                        .catch((err)=> console.log(err))
+                       
+                    
+                    }
+                
+            })
+
+            }
+        
+     
+        
+        
+      
+        });
+          
+      /*
+      .post(    passport.authenticate('local-signup',{
+              successRedirect : '/login',
+              failureRedirect : '/index',
+              passReqToCallback : true
+          })
+      .post(*/
+          
+        /*
+        
+        
+       
+        */
+   
+
       
       router.route('/login')
       .get((req, res, next) => {
-          res.render('index');
+          res.render('login');
         })
       .post((req,res,next)=>{})  
      
+
+
+
+
+      router.route('/dashboard')
+      .get((req, res, next) => {
+          res.render('dashboard');
+        })
+      .post((req,res,next)=>{
+
+      })  
+
+     
+
+
 
 module.exports = router;
