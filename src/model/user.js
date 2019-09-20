@@ -6,7 +6,8 @@ const userSchema = new Schema({
 	email: { type: String, required: true },
 	password: { type: String, required: true },
 	roll:{type: String, required: true },
-	estado:{type: String, required: true}
+	estado:{type: String, required: true},
+	fechaReg: {type:Date, default:Date.now}
 });
 
 

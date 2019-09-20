@@ -19,6 +19,10 @@ router.route('/')
     res.redirect('/login');
 })
 
+
+router.route('/index')
+        .get((req,res)=> res.render('/index'))
+
 const consultarProductos = async (req, res, next) => {
     try {
         res.json({"message":"welcome to hell"});
@@ -104,6 +108,7 @@ router.route('/producto')
       .put(actualizarProductos)
       .delete(destroyProductos)
 
+
 router.route('/register')
       .get((req, res, next) => {
           res.render('register');
@@ -126,13 +131,14 @@ router.route('/register')
             }
             else{
                User.findOne({email : email})
-               .then((user)=>{
-                if(user) {
+               .then((users)=>{
+                if(users) {
                    res.send("el usuario ya esta registrado en la base de datos")
-                }else{
+                }
+                else{
                 
                 
-                        const users = new User(
+                        const userss = new User(
                             {
                                 email,
                                 password,
@@ -147,9 +153,20 @@ router.route('/register')
 
                         console.log(users);
 
-                        users.save()
-                        .then(()=> console.log("saved"))
-                        .catch((err)=> console.log(err))
+                        bcryst.genSalt(10, (err, salt) =>
+                            bcryst.hash(userss.password , salt ,(err,hash) => {
+                                if(err) throw err;
+                                userss.password = hash;
+                                userss.save()
+                                .then(users =>{
+                                    console.log('saved');
+                                    res.redirect('/dashboard',{
+                                        name: req.body.email
+                                    })
+                                })
+                                .catch(err => console.log(err))
+                            })
+                        )
                        
                     
                     }
