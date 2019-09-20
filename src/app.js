@@ -72,7 +72,7 @@ app.use(express.urlencoded({extended:false}));
 app.use(require("./routes/routes"));
 app.use(require("./routes/routeCliente"));
 app.use(require("./routes/routeProduct"));
-app.use(require("./routes/routeProduct"));
+app.use(require("./routes/routeUser"));
  
  
 

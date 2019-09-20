@@ -1,10 +1,12 @@
 const express = require('express');
+const bcryst = require('bcryptjs');
 const path = require('path');
 const router = express.Router();
+
 const productSchema = require('../model/producto');
 const clientes = require("../model/cliente");
 const User = require("../model/user");
-const bcryst = require('bcryptjs');
+
 
 const passport = require('passport');
 /*
@@ -110,7 +112,7 @@ router.route('/producto')
 
 
 router.route('/register')
-      .get((req, res, next) => {
+      .get((req, res) => {
           res.render('register');
           
         })
