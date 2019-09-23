@@ -1,3 +1,91 @@
+
+const User = require('../model/user');
+
+module.exports = {
+
+  registrarUsuario: async function(req, res) {
+
+   const {email , password, password2, roll} = req.body
+ 
+   if(!email){
+       req.json({error:'debe ingresar un email valido'});
+   }
+   else if(!password){
+     req.flash('error','debe ingresar un a contraseña');
+   }
+   
+   else if(password != password2){
+     req.flash('error','las contraseñas deben coincidir');
+   }
+ 
+   else if(password.length<6){
+     req.flash('error','La contraseña debe de tener al menos 6 caracteres');
+   }
+   else{
+      User.findOne({email : email})
+      .then((users)=>{
+       if(users) {
+         req.flash('error','El usuario ya está registrado!');
+       }
+       else{
+       
+       
+               const userss = new User(
+                   {
+                       email,
+                       password,
+                       roll,
+                       estado:"sin verificar"                     
+                   }
+ 
+               );
+ 
+               console.log(userss);
+ 
+               bcryst.genSalt(10, (err, salt) =>
+                   bcryst.hash(userss.password , salt ,(err,hash) => {
+                       if(err) throw err;
+                       userss.password = hash;
+                       userss.save()
+                       .then( () => {
+                         console.log("saved");
+                         setTimeout(()=>{
+                           req.flash('success_msg','usuario registrado exitosamente!');
+                         },5000);
+                         
+                         
+                           
+                         
+                         res.redirect('/dashboard',{
+                               name: req.body.email
+                           })
+                       })
+                       .catch(err => console.log(err))
+                   })
+               )
+              
+           
+           }
+       
+   })
+ 
+   }
+ 
+ 
+ 
+ 
+ 
+ }
+ 
+
+}
+
+
+
+
+
+
+/* 
 module.exports = {
     create: async function(req, res) {
       try {
@@ -65,6 +153,7 @@ module.exports = {
         res.send(response("Something is wrong...").isError(401, { error: err }));
       }
     },
+
     destroy: function(req, res) {
       try {
         Doctors.deleteOne({ id: req.body.id }, err => {
@@ -120,3 +209,4 @@ module.exports = {
       }
     }
   };
+ */

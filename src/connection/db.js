@@ -5,5 +5,5 @@ const config = require("../config/config.json")[ENVIRONMENT];
 
 mongoose
         .connect(...config)
-        .then(()=>console.log("sucess"))
-        .catch(err => console.log({DBError:err}));
+        .then(()=>console.log(`Database  connected`))
+        .catch(err => console.log({DBError : err}));

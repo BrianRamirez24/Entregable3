@@ -2,12 +2,51 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const productSchema = new Schema({
-    nombre:{type:String, required:true},
-    nit:{type:String, required:true},
-    direccion:{type:String, required:true},
-    telefono:{type:String, required:true},
-    email:{type:String, required:true}
+const clientSchema = new Schema({
 
-})
-module.exports = mongoose.model('cliente',productSchema)
+    tipd:{
+          type:String,
+          require:true,
+          enum:['CC', 'TI', 'TE']
+        },
+
+    doc:{
+        type:String, 
+        required:true
+    },
+    
+    nombre:{
+        type:String, 
+        required:true
+    },
+    
+    apellidos:{
+        type: String,
+        require:true
+    },
+    
+    genero:{
+        type:String, 
+        require:true,
+        enum:['M','F']
+    },
+    
+    
+    
+    direccion:{
+        type:String, 
+        required:true
+    },
+
+    telefono:{
+        type:String, 
+        required:true
+    },
+    
+    celular:{
+              type:String, 
+              required:false
+       }
+    })
+
+module.exports = mongoose.model('Cliente', clientSchema)

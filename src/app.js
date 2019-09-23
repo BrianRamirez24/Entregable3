@@ -2,12 +2,14 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
-const cors = require('cors'); 
 const exphbs = require('express-handlebars');
 const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
-require('./model/db');
+const methodOverride = require('method-override');
+//const cors = require('cors'); 
+
+require('./connection/db');
 require('./passport/local-auth');
 
 
@@ -16,15 +18,24 @@ require('./passport/local-auth');
 const app = express();
 
 //settings
+
 app.set('PORT',process.env.PORT || 3000);
-app.set('views' ,path.join(__dirname,'views'));  
+
+app.set('views' ,path.join(__dirname,'views'));
+
+// static files
+app.set(express.static(path.join(__dirname + 'public')));
+
+
+
 app.engine('.hbs', exphbs({
-        defaultLayout:'main',
-        layoutsDir:path.join(app.get('views'),'layouts'),
-        partialsDir: join(app.get('views'),'partials'),
+        defaultLayout:'main.hbs',
+        layoutsDir: path.join(app.get('views'),'layouts'),
+        partialsDir: path.join(app.get('views'),'partials'),
         extname:'.hbs'
-}))
-app.set('.hbs',exphbs);
+}));
+
+app.set('view engine','.hbs');
 
 app.set('json spaces', 2); 
 
@@ -34,7 +45,8 @@ app.set('json spaces', 2);
 
 
 app.use(morgan('dev'));
-app.use(cors());
+
+app.use(methodOverride('_method'));
 app.use(express.json());
 //global variables
 
@@ -51,9 +63,9 @@ app.use(flash());
 
 
 app.use((req,res,next)=>{
-    res.locals.exito_msg = req.flash('exito_msg');
+    res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
-    res.locals.error=req.flash('error');
+    res.locals.error = req.flash('error');
     next(); 
 })
 
@@ -69,7 +81,8 @@ app.use(express.urlencoded({extended:false}));
 
 
 //routes
-app.use(require("./routes/routes"));
+
+
 app.use(require("./routes/routeCliente"));
 app.use(require("./routes/routeProduct"));
 app.use(require("./routes/routeUser"));
