@@ -4,7 +4,7 @@ const path = require('path');
 
 const apiprooductController = require('../../controller/apicontroller/apiproductcontroller');
 const router = express.Router();
-router.router('/api/product');
+router.router('/api/product')
 .get( (req,res)=>{
 
 })

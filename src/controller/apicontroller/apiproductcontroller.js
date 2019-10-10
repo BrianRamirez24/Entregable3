@@ -15,33 +15,26 @@ module.exports = {
         
     try{
         if(!codigo) {
-            req.flash('error','codigo de producto requerido');
-            errors.push('codigo de producto requerido');
+            res.status(401).send('por favor ingrese un codigo valido para el producto');
         }
-        if(!nombre){
-            req.flash('error','debe ingresar el nombre del producto');
-            errors.push('debe ingresar el nombre del producto');
+        else if(!nombre){
+            res.status(401).send('por favor ingrese un nombre valido al producto');
         }
-        if(!descripcion){
-            req.flash('error','debe de ingresar una descripcion valida al producto');
-            errors.push('debe de ingresar una descripcion valida al producto');
+        else if(!descripcion){
+            res.status(401).send('por favor ingrese una descripcion valida');
         }
-        if(!stock){
-            req.flash('error','por favor ingrese un stock al producto');
-            errors.push('por favor ingrese un stock al producto');
+        else if(!stock){
+            res.status(401).send('por favor ingrese un stock valido');
         }
-        if(!precio){
-            req.flash('error','debe darle un precio');
-            errors.push('debe darle un precio');
+        else if(!precio){
+            res.status(401).send('por favor ingrese un precio valido ');
         
         }
         else{
            ProductSchema.findOne({codigo: codigo})
                              .then((product)=>{
               if(product){
-
-                req.flash('error','el producto ya está registrado');
-                errors.push('debe darle un precio');
+                res.status(401).send('el producto ya esta registrado');
               }
               else{
 
@@ -59,9 +52,9 @@ module.exports = {
                    await products.save(err =>{
 
                         err ?
-                        req.flash('success_msg','no se almacenaron datos intente nuevamente') : 
-                        res.status(200)('success_msg', 'producto registrado exitosamente');
-                        res.redirect('/dashboard');
+                        res.status(401).send('no se registraron datos por favor registre nuevamente'): 
+                        res.status(200).send('producto registrado exitosamente');
+                    
                 })
              
           }
@@ -80,13 +73,17 @@ module.exports = {
     },
 
     listProducts: async function(req, res) {
-        const productList = await ProductSchema.find().sort({name: 'asc'});
-        res.render('/dashboard',{ productList });
+        const productList = await Promise.resolve(ProductSchema.find().sort({name: 'asc'}));
+        res.status(200).send({ productList });
     },
 
     updateProduct: async function(req, res){
 
-        const { codigo, nombre, descripcion,stock, precio } = req.body;
+        const { codigo, 
+                nombre, 
+                descripcion,
+                stock, 
+                precio } = req.body;
 
         const objProduct = {
                 codigo:"",

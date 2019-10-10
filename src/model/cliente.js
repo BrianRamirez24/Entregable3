@@ -7,7 +7,7 @@ const clientSchema = new Schema({
     tipd:{
           type:String,
           require:true,
-          enum:['CC', 'TI', 'TE']
+          enum:['CC', 'TI', 'CE']
         },
 
     doc:{

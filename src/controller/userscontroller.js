@@ -3,49 +3,46 @@ const Users = require('../model/user');
 
 module.exports = {
 
-  registrarUsuario: async (req, res) => {
+  registrarUsuario = async function(req, res){
     try {
-
-   const {email, 
+  
+   const {nombre,
+          email, 
           password, 
           password2, 
-          roll} = req.body
-  var errors = [];      
-  var exito = [];      
-  
- 
-   if(!email || email.length == 0){
-       req.flash('error_msg','debe ingresar un email valido');
-       errors.push('debe ingresar un email valido');
-   }
-  if(!password){
-     req.flash('error_msg','debe ingresar un a contraseña');
-     errors.push('debe ingresar un a contraseña');
-   }
-   
-  if(password != password2){
-     req.flash('error_msg','las contraseñas deben coincidir');
-     errors.push('las contraseñas deben coincidir');
-   }
- 
-  if(password.length<6){
-     req.flash('error_msg','La contraseña debe de ener al menos 6 caracteres');
-     errors.push('La contraseña debe de ener al menos 6 caracteres');
-   }
-
-   else{
-
-       const resultado = await Users.findOne({email : email});
-       console.log(resultado);
-       if(resultado){
-         
-         req.flash('mensajeError', 'el usuario ya está registrado');
-         errors.push('La contraseña debe de ener al menos 6 caracteres');
-         console.log(req.flash('mensajeError'));
+          roll
+          } = req.body
         
-       }
-       else{
-
+       var errors = [];
+       var success = [];
+  
+    if(nombre.length<=0){
+        errors.push({ message :'debe ingresar un nombre valido'});   
+    }
+  
+    if(email.length<8 ){
+      errors.push({ message :'debe ingresar un email valido'});
+    }
+  
+    if(password.length<6){
+       errors.push({ message :'La contraseña debe de tener al menos 6 caracteres'});
+    }
+    
+    if (password != password2){
+     errors.push({ message :'las contraseñas deben coincidir'});
+    }
+  
+       const resultado = await Users.findOne({email : email});
+       
+       if(resultado){
+        console.log(`resultado 
+                    ${resultado}`);
+        req.flash('errormsg', 'el usuario ya está registrado');
+        errors.push({message : 'el usuario ya está registrado'})
+             }
+        
+        
+        /*
         const userss = new Users(
           {
               email,
@@ -54,12 +51,32 @@ module.exports = {
               estado:"sin verificar"                     
           }
           );
-
-           userss.password = userss.encryptPassword(password);
-           req.flash('mensajeError','usuario creado exitosmamente');
+  
+           bcryst.genSalt(10, (err, salt) =>
+           bcryst.hash(userss.password , salt ,(err, hash) => {
+                if(err){ 
+                 throw err;
+                }
+               else{
+               userss.password = hash;
+               console.log(userss);
+            
+              
+               /*
+               await userss.save( err =>{
+                 err?
+                 console.log('no se inserto usuario intente nuevamente'):
+                 req.flash('exitomsg','usuario registrado');
+               }); 
+               */
+  
+             /*  }
+              })
+              
+              ); */
+          
            
-           console.log(userss);
-     
+          
              /*  await userss.save(
                 (err) =>{
                   (err)?
@@ -68,27 +85,26 @@ module.exports = {
                 }
               ); */
      
-       }
+       
       
-           }
-
+               
+              
+           
+           
+  
           } catch(err){
             console.error(err);
-             req.flash('error_msg', err.toString());
-             errors.push(err.toString());
+             req.flash('error', JSON.stringify(err));
+             res.send(req.flash('error'));
            }
               
    }
  
  
-   
+ 
+ 
+ 
   }
- 
- 
- 
- 
- 
-
 
 
 
