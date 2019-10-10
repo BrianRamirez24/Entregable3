@@ -50,7 +50,6 @@ module.exports = {
                   console.log(products);
 
                    await products.save(err =>{
-
                         err ?
                         res.status(401).send('no se registraron datos por favor registre nuevamente'): 
                         res.status(200).send('producto registrado exitosamente');
