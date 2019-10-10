@@ -1,14 +1,18 @@
-const ProductSchema = require('../model/producto');
+const ventaSchema = require('../model/venta');
 
 
 
 
 module.exports = {
 
-    createProduct: async function(req,res){
-        const {codigo, nombre, descripcion,stock, precio } = req.body;
+    createVenta: async function(req, res){
+        const {codigo,
+               nombre, 
+               descripcion,
+               stock, 
+               precio } = req.body;
         var errors = []; 
-    try{
+    try{/*
         if(!codigo) {
             req.flash('error','codigo de producto requerido');
             errors.push('codigo de producto requerido');
@@ -65,21 +69,21 @@ module.exports = {
         })
 
 
-
+    
         .catch(err =>console.log( err ));
-    }
+    */}
 } catch(error){
         console.log('error: ', error);
     }
 
     },
 
-    listProducts: async function(req, res) {
+    listVenta: async function(req, res) {
         const productList = await ProductSchema.find().sort({name: 'asc'});
         res.render('/dashboard',{ productList });
     },
 
-    updateProduct: async function(req, res){
+    updateVenta: async function(req, res){
 
         const { codigo, nombre, descripcion,stock, precio } = req.body;
 
@@ -113,28 +117,20 @@ module.exports = {
 
     },
     
-    destroyProduct:async function (req, res){
+    destroyVenta:async function (req, res){
         try{
-            const id= req.params.id;
-                await ProductSchema.deleteOne({ id }, err =>{ 
-                                                      err ? req.flash('error', 'no se elimino el producto') : 
-                                                      res.status(200).flash('success_msg','producto eliminado exitosamente')})
+            const { id } = req.params.id;
+                await ProductSchema.deleteOne({ id },
+                     err =>{ 
+                        err ? req.flash('error', 'no se elimino el producto') : 
+                        res.status(200).send('venta eliminada exitosamente')})
         }
         catch(error){
 
         }
-    },
+    }
 
-    fiterProduct: async function(req, res) {
-        const productList = await ProductSchema.findOne({codigo:codigo},
-                                                        (err, products) => {
-            err? 
-                 req.flash('errrormsg', 'producto no encontrado') : 
-                 res.render('/products/productFilter');
-        });
-        
-       
-    },
+
 
 
 

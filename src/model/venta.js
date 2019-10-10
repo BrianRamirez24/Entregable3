@@ -4,8 +4,10 @@ const productSchema = mongoose.model('Productos');
 
 const ventaSchema = new Schema({
         
-    codigoVenta:{type:String, required : true },
-    producto:{type:Schema.Types.ObjectId, ref : "Productos"},
+    codigoVenta:{type:String, 
+                 required : true },
+                producto:[{type:Schema.Types.ObjectId, 
+                            ref:"Productos"}],
     cantidad:{type:Number, required:true},
     iva:{type:Number, required:true},
     subtota:{type:Number, 
