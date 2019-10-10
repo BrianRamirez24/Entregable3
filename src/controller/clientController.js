@@ -7,28 +7,35 @@ const ClientSchema = require('../model/cliente');
 module.exports = {
 
     createProduct: async function(req,res){
-        const {tipod, doc,nombre, apellidos,genero, direccion, telefono, celular } = req.body;
+        const {tipod, 
+               doc,
+               nombre, 
+               apellidos,
+               genero, 
+               direccion, 
+               telefono, 
+               celular } = req.body;
     try{
         if(!doc) {
-            res.status(500).flash('error','codigo de producto requerido')
+            res.status(500).send('codigo de producto requerido')
         }
         else if(!nombre){
-            res.status(500).flash('error','debe ingresar el nombre del producto');
+            res.status(500).send('debe ingresar el nombre del producto');
 
         }else if(!apellidos){
-            res.status(500).flash('error','debe de ingresar una descripcion valida al producto');
+            res.status(500).send('debe de ingresar una descripcion valida al producto');
         
         }else if(!direccion){
-            res.status(500).flash('error','por favor ingrese un stock al producto');
+            res.status(500).send('por favor ingrese un stock al producto');
         
         }
         else if(!telefono){
-            res.status(500).flash('error','debe darle un precio');
+            res.status(500).send('debe darle un precio');
         
         }
         
         else if(!celular){
-            res.status(500).flash('error','debe darle un precio');
+            res.status(500).send('debe darle un precio');
         
         }
         
@@ -37,7 +44,7 @@ module.exports = {
                              .then((cliente)=>{
               if(cliente){
 
-                res.status(500).flash('error','el cliente ya esta registado');
+                res.status(500).send('el cliente ya esta registado');
 
               }
               else{
@@ -58,9 +65,9 @@ module.exports = {
                    await products.save(err =>{
 
                         err ?
-                        res.status(500).flash('erorr','no se almacenaron datos intente nuevamente') : 
-                        res.status(200).flash('success_msg', 'producto registrado exitosamente');
-                        res.redirect('/dashboard');
+                        res.status(500).send('no se almacenaron datos intente nuevamente') : 
+                        res.status(200).send('producto registrado exitosamente');
+                       
                 })
              
           }
@@ -121,7 +128,7 @@ module.exports = {
         try{
             const id= req.params.id;
                 await ProductSchema.deleteOne({ id }, err =>{ 
-                                                      err ? res.status(500).flash('error', 'no se elimino el producto') : 
+                                                      err ? res.status(500).send( 'no se elimino el producto') : 
                                                       res.status(200).flash('success_msg','producto eliminado exitosamente')})
         }
         catch(error){
@@ -131,7 +138,7 @@ module.exports = {
 
     fiterProduct: async function(req, res) {
         const productList = await ProductSchema.findOne({codigo:codigo},(err,products)=>{
-            err?  res.status(500).flash('error', 'registro no encontrado') : 
+            err?  res.status(500).send( 'registro no encontrado') : 
             res.redirect('/products/');
         });
         res.render('/products/productFilter',{ productList });
