@@ -4,8 +4,15 @@ const ProductSchema = require('../model/producto');
 module.exports = {
 
     createProduct: async function(req,res){
-        const {codigo, nombre, descripcion,stock, precio } = req.body;
+        const { codigo, 
+                nombre, 
+                descripcion,
+                stock, 
+                precio 
+            } = req.body;
+
         var errors = []; 
+        
     try{
         if(!codigo) {
             req.flash('error','codigo de producto requerido');

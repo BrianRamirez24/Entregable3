@@ -16,26 +16,28 @@ module.exports = {
                telefono, 
                celular } = req.body;
     try{
-        if(!doc) {
-            res.status(500).send('codigo de producto requerido')
+        if(!doc || doc.length<5) {
+            res.status(500).send('por favor ingrese su numero de documento')
         }
-        else if(!nombre){
-            res.status(500).send('debe ingresar el nombre del producto');
+        if(!nombre || nombre.length <=0){
+            res.status(500).send('por favor ingrese un nombre valido');
 
-        }else if(!apellidos){
-            res.status(500).send('debe de ingresar una descripcion valida al producto');
-        
-        }else if(!direccion){
-            res.status(500).send('por favor ingrese un stock al producto');
+        }
+        if(!apellidos || apellidos.length<=0){
+            res.status(500).send('no se reconoce apellido por favor intente nuevamente');
         
         }
-        else if(!telefono){
-            res.status(500).send('debe darle un precio');
+        if(!direccion || direccion.length<5){
+            res.status(500).send('no se reconoce direccion por favor digite nuevamente');
+        
+        }
+        if(!telefono){
+            res.status(500).send('no se reconce telefono por favor ingrese nuevamente');
         
         }
         
-        else if(!celular){
-            res.status(500).send('debe darle un precio');
+        if(!celular){
+            res.status(500).send('no se reconoce numero de celular por favor ingrese nuevamente');
         
         }
         
@@ -86,7 +88,7 @@ module.exports = {
     },
 
     listProducts: async function(req, res) {
-        const productList = await ProductSchema.find().sort({name: 'asc'});
+        const clientList = await ClientSchema.find().sort({name: 'asc'});
         res.render('/dashboard',{ productList });
     },
 
