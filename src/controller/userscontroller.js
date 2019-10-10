@@ -1,84 +1,93 @@
 
-const User = require('../model/user');
+const Users = require('../model/user');
 
 module.exports = {
 
-  registrarUsuario: async function(req, res) {
+  registrarUsuario: async (req, res) => {
+    try {
 
-   const {email , password, password2, roll} = req.body
+   const {email, 
+          password, 
+          password2, 
+          roll} = req.body
+  var errors = [];      
+  var exito = [];      
+  
  
-   if(!email){
-       req.json({error:'debe ingresar un email valido'});
+   if(!email || email.length == 0){
+       req.flash('error_msg','debe ingresar un email valido');
+       errors.push('debe ingresar un email valido');
    }
-   else if(!password){
-     req.flash('error','debe ingresar un a contraseña');
+  if(!password){
+     req.flash('error_msg','debe ingresar un a contraseña');
+     errors.push('debe ingresar un a contraseña');
    }
    
-   else if(password != password2){
-     req.flash('error','las contraseñas deben coincidir');
+  if(password != password2){
+     req.flash('error_msg','las contraseñas deben coincidir');
+     errors.push('las contraseñas deben coincidir');
    }
  
-   else if(password.length<6){
-     req.flash('error','La contraseña debe de tener al menos 6 caracteres');
+  if(password.length<6){
+     req.flash('error_msg','La contraseña debe de ener al menos 6 caracteres');
+     errors.push('La contraseña debe de ener al menos 6 caracteres');
    }
+
    else{
-      User.findOne({email : email})
-      .then((users)=>{
-       if(users) {
-         req.flash('error','El usuario ya está registrado!');
+
+       const resultado = await Users.findOne({email : email});
+       console.log(resultado);
+       if(resultado){
+         
+         req.flash('mensajeError', 'el usuario ya está registrado');
+         errors.push('La contraseña debe de ener al menos 6 caracteres');
+         console.log(req.flash('mensajeError'));
+        
        }
        else{
-       
-       
-               const userss = new User(
-                   {
-                       email,
-                       password,
-                       roll,
-                       estado:"sin verificar"                     
-                   }
- 
-               );
- 
-               console.log(userss);
- 
-               bcryst.genSalt(10, (err, salt) =>
-                   bcryst.hash(userss.password , salt ,(err,hash) => {
-                       if(err) throw err;
-                       userss.password = hash;
-                       userss.save()
-                       .then( () => {
-                         console.log("saved");
-                         setTimeout(()=>{
-                           req.flash('success_msg','usuario registrado exitosamente!');
-                         },5000);
-                         
-                         
-                           
-                         
-                         res.redirect('/dashboard',{
-                               name: req.body.email
-                           })
-                       })
-                       .catch(err => console.log(err))
-                   })
-               )
-              
+
+        const userss = new Users(
+          {
+              email,
+              password,
+              roll,
+              estado:"sin verificar"                     
+          }
+          );
+
+           userss.password = userss.encryptPassword(password);
+           req.flash('mensajeError','usuario creado exitosmamente');
            
+           console.log(userss);
+     
+             /*  await userss.save(
+                (err) =>{
+                  (err)?
+                  res.flash('error','no se logro registrar el usuario intente nuevamente'):
+                  res.flash('success_msg','usuario registrado')
+                }
+              ); */
+     
+       }
+      
            }
-       
-   })
- 
+
+          } catch(err){
+            console.error(err);
+             req.flash('error_msg', err.toString());
+             errors.push(err.toString());
+           }
+              
    }
  
  
+   
+  }
  
  
  
- }
  
-
-}
+ 
 
 
 

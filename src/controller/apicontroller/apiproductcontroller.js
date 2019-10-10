@@ -1,8 +1,6 @@
 const ProductSchema = require('../model/producto');
 
 
-
-
 module.exports = {
 
     createProduct: async function(req,res){

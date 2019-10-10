@@ -10,10 +10,26 @@ const userSchema = new Schema({
 	fechaReg: {type:Date, default:Date.now}
 });
 
+//se encripta la contrasena
+userSchema.methods.encryptPassword = async function(password) {
+	const salt = await bcryp.genSalt(10);
+	const hash = bcryp.hash(this.password, salt, (err, hash) =>{
+		if(err){
+			throw err
+		}
+		else{
+			this.password = hash
+		}
 
-userSchema.methods.encryptPassword = (password) => bcryp.hashSync(password, bcryp.genSaltSync(10));
+	});
+	return hash; 
+}
 
-userSchema.methods.comparePassword = (password) => bcryp.compareSync(password, this.password);
+
+//metodo de login
+userSchema.methods.comparePassword = async function(password) { 
+	return await bcryp.compare(password, this.password)
+}
 
 
 module.exports = mongoose.model("user", userSchema);
